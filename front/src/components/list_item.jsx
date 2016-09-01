@@ -1,6 +1,9 @@
-var React = require('react')
+let React = require('react')
 
-var ListItem = React.createClass({
+let ListItem = React.createClass({
+  propTypes: {
+    ingredient: React.PropTypes.string
+  },
   render: function () {
     return (
       <li>

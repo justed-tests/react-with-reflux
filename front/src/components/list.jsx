@@ -1,11 +1,13 @@
-var React = require('react')
-var ListItem = require('./list_item.jsx')
+let React = require('react')
+let ListItem = require('./list_item.jsx')
+let Reflux = require('reflux')
+let Actions = require('../reflux/actions.jsx')
+let IngredientsStore = require('../reflux/ingredients-store.jsx')
 
-let HTTP = require('./../services/httpservice.js')
-
-var List = React.createClass({
+let List = React.createClass({
+  mixins: [Reflux.listenTo(IngredientsStore, 'onChange')],
   render: function () {
-    var items = this.state.ingredients.map(function (item) {
+    let items = this.state.ingredients.map(function (item) {
       return <ListItem key={item.key} ingredient={item.text} />
     })
     return (
@@ -14,19 +16,16 @@ var List = React.createClass({
       </ul>
     )
   },
+  onChange: function (ingredients) {
+    this.setState({ingredients: ingredients})
+  },
   getInitialState: function () {
     return {
       ingredients: []
     }
   },
   componentWillMount: function () {
-    HTTP
-      .get('/ingredients')
-      .then(function (items) {
-        this.setState({
-          ingredients: items
-        })
-      }.bind(this))
+    Actions.getIngredients()
   }
 })
 
