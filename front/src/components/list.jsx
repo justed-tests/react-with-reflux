@@ -11,19 +11,44 @@ let List = React.createClass({
       return <ListItem key={item.key} ingredient={item.text} />
     })
     return (
-      <ul>
-        {items}
-      </ul>
+      <div>
+        <input
+          type="text"
+          placeholder="add new item"
+          value={this.state.newText}
+          onChange={this.onInputChange}
+        />
+        <button type="button" onClick={this.onClick}>Submit</button>
+        <ul>
+          {items}
+        </ul>
+      </div>
     )
   },
+
   onChange: function (ingredients) {
     this.setState({ingredients: ingredients})
   },
+
+  onClick: function () {
+    let newText = this.state.newText
+    if (newText) {
+      Actions.postIngredient(newText)
+      this.setState({newText: ''})
+    }
+  },
+
+  onInputChange: function (e) {
+    let val = e.target.value
+    this.setState({newText: val})
+  },
+
   getInitialState: function () {
     return {
       ingredients: []
     }
   },
+
   componentWillMount: function () {
     Actions.getIngredients()
   }
